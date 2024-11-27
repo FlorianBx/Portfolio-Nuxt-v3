@@ -7,6 +7,14 @@ export default defineNuxtConfig({
     '@nuxtjs/i18n',
     '@vueuse/nuxt',
     '@nuxt/eslint',
-    '@nuxt/content'
-  ]
+    '@nuxt/content',
+    '@nuxt/fonts',
+  ],
+  fonts: {
+    families: [{ name: 'Bebas Neue', provider: 'google' }],
+  },
+  tailwindcss: {
+    configPath: './tailwind.config.ts',
+  },
 })
+
