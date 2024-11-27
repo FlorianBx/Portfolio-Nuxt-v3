@@ -4,6 +4,7 @@ const description = ref('portfolio-the-good-one')
 
 useHead({
   title,
+  htmlAttrs: { lang: 'fr' },
   meta: [
     { name: 'description', content: description.value },
     { name: 'keywords', content: 'portfolio, portfolio-the-good-one' },
