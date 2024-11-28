@@ -12,10 +12,6 @@ const openModal = () => {
   <article
     class="relative lg shadow-lg bg-zinc-800 rounded-xl p-8 overflow-hidden col-span-1 md:col-span-1 row-span-4"
   >
-    <!-- <article -->
-    <!--   class="relative lg shadow-lg bg-zinc-800 rounded-xl p-8 overflow-hidden" -->
-    <!--   :class="$attrs.class" -->
-    <!-- > -->
     <h2 class="font-bold mb-8 uppercase z-20">about me</h2>
     <p class="absolute bottom-24 text-4xl opacity-90 font-bebas-title z-20">
       Hey I'm Florian 👋, Vue.js specialist. Accessibility advocate.

@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { ChevronLeft, ChevronRight, X as XIcon } from 'lucide-vue-next'
+import gsap from 'gsap'
 
 interface Slide {
   id: string
@@ -18,7 +19,9 @@ const emit = defineEmits<{
   'update:modelValue': [value: boolean]
 }>()
 
-// Slides data
+const ANIMATION_DURATION = 0.4 // 400ms
+const PREVIEW_WIDTH = 300 // width of preview slides in pixels
+
 const slides = [
   {
     id: 'about',
@@ -47,13 +50,77 @@ const prevIndex = computed(() =>
 
 const nextIndex = computed(() => (currentIndex.value + 1) % slides.length)
 
-const nextSlide = () => {
-  currentIndex.value = nextIndex.value
+const isTransitioning = ref(false)
+const slideRefs = ref<HTMLElement[]>([])
+
+const animateSlide = (element: HTMLElement, fromVars: gsap.TweenVars, toVars: gsap.TweenVars) => {
+  return gsap.fromTo(
+    element,
+    {
+      ...fromVars,
+      duration: ANIMATION_DURATION,
+      ease: 'power2.inOut',
+    },
+    {
+      ...toVars,
+      duration: ANIMATION_DURATION,
+      ease: 'power2.inOut',
+    }
+  )
 }
 
-const prevSlide = () => {
-  currentIndex.value = prevIndex.value
+const handleTransition = async (direction: 'next' | 'prev') => {
+  if (isTransitioning.value) return
+  isTransitioning.value = true
+
+  const timeline = gsap.timeline()
+  const currentSlide = slideRefs.value[currentIndex.value]
+  const targetSlide = slideRefs.value[direction === 'next' ? nextIndex.value : prevIndex.value]
+  const xOffset = direction === 'next' ? -PREVIEW_WIDTH : PREVIEW_WIDTH
+
+  // Animate current slide out
+  timeline.add(
+    animateSlide(
+      currentSlide,
+      {
+        xPercent: 0,
+        scale: 1,
+        zIndex: 10,
+      },
+      {
+        xPercent: -xOffset,
+        scale: 0.75,
+        zIndex: 5,
+      }
+    )
+  )
+
+  // Animate target slide in
+  timeline.add(
+    animateSlide(
+      targetSlide,
+      {
+        xPercent: xOffset,
+        scale: 0.75,
+        zIndex: 5,
+      },
+      {
+        xPercent: 0,
+        scale: 1,
+        zIndex: 10,
+      }
+    ),
+    '-=0.4'
+  )
+
+  timeline.then(() => {
+    currentIndex.value = direction === 'next' ? nextIndex.value : prevIndex.value
+    isTransitioning.value = false
+  })
 }
+
+const nextSlide = () => handleTransition('next')
+const prevSlide = () => handleTransition('prev')
 
 const closeModal = () => {
   emit('update:modelValue', false)
@@ -64,6 +131,37 @@ const handleKeydown = (e: KeyboardEvent) => {
   if (e.key === 'ArrowRight') nextSlide()
   if (e.key === 'ArrowLeft') prevSlide()
 }
+
+// Set up keyboard navigation
+onMounted(() => {
+  window.addEventListener('keydown', handleKeydown)
+
+  // Set initial positions
+  gsap.set(slideRefs.value[prevIndex.value], {
+    xPercent: -PREVIEW_WIDTH,
+    scale: 0.75,
+    zIndex: 5,
+  })
+
+  gsap.set(slideRefs.value[currentIndex.value], {
+    xPercent: 0,
+    scale: 1,
+    zIndex: 10,
+  })
+
+  gsap.set(slideRefs.value[nextIndex.value], {
+    xPercent: PREVIEW_WIDTH,
+    scale: 0.75,
+    zIndex: 5,
+  })
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', handleKeydown)
+})
+const PREVIEW_OPACITY = 0.15
+const PREVIEW_SCALE = 0.85
+const PREVIEW_PEEK = 100 // pixels visibles du slide adjacent
 </script>
 
 <template>
@@ -71,103 +169,66 @@ const handleKeydown = (e: KeyboardEvent) => {
     <div
       v-if="modelValue"
       class="fixed inset-0 z-50 flex items-center justify-center"
-      @click="closeModal"
-      @keydown="handleKeydown"
-      tabindex="-1"
       role="dialog"
       aria-modal="true"
     >
-      <!-- Backdrop -->
       <div class="absolute inset-0 bg-black/85 backdrop-blur-sm" aria-hidden="true" />
 
-      <!-- Carousel Container -->
-      <div class="relative w-full h-[90vh] flex items-center justify-center" @click.stop>
-        <!-- Previous Slide Preview -->
-        <div
-          class="absolute left-4 w-64 h-[100vh] opacity-50 transform -translate-x-1/2 scale-75 transition-all duration-300"
-        >
-          <component
-            :is="slides[prevIndex].component"
-            class="w-full h-full bg-zinc-800 rounded-xl p-4 shadow-2xl"
-          />
-        </div>
+      <div class="relative w-full h-[90vh] flex items-center justify-center">
+        <!-- Carte globale dark -->
+        <div class="absolute w-[95vw] h-[90vh] bg-zinc-800/50 rounded-3xl overflow-hidden">
+          <!-- Slide précédent -->
+          <div class="absolute left-0 w-[15vw] h-full bg-zinc-800 rounded-3xl" />
 
-        <!-- Current Slide -->
-        <div
-          class="relative w-[80vw] h-[90vh] bg-zinc-800 rounded-xl p-8 shadow-2xl transition-all duration-300 z-10"
-        >
-          <!-- Navigation -->
-          <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-bold text-white">
-              {{ slides[currentIndex].title }}
-            </h2>
-            <button
-              class="p-2 hover:bg-zinc-700 rounded-full transition-colors"
-              @click="closeModal"
-              aria-label="Close modal"
-            >
-              <XIcon class="w-6 h-6" />
-            </button>
+          <!-- Container du slide actif -->
+          <div
+            v-for="(slide, index) in slides"
+            :key="slide.id"
+            ref="slideRefs"
+            class="absolute left-[15vw] right-[15vw] h-full bg-zinc-800 shadow-2xl"
+            :class="{ 'pointer-events-none': index !== currentIndex }"
+          >
+            <div class="h-full">
+              <div class="flex justify-between items-center p-8">
+                <h2 class="text-xl font-bold text-white">{{ slide.title }}</h2>
+                <button
+                  v-if="index === currentIndex"
+                  class="p-2 hover:bg-zinc-700 rounded-full transition-colors"
+                  @click="closeModal"
+                >
+                  <XIcon class="w-6 h-6" />
+                </button>
+              </div>
+
+              <div class="h-[calc(100%-5rem)] overflow-auto p-8 pt-0">
+                <component :is="slide.component" />
+              </div>
+            </div>
           </div>
 
-          <!-- Main Content -->
-          <div class="h-[calc(100%-4rem)] overflow-auto">
-            <component :is="slides[currentIndex].component" :key="currentIndex" class="h-full" />
-          </div>
+          <!-- Slide suivant -->
+          <div class="absolute right-0 w-[15vw] h-full bg-zinc-800 rounded-3xl" />
         </div>
 
-        <!-- Next Slide Preview -->
-        <div
-          class="absolute right-4 w-64 h-[100vh] opacity-50 transform translate-x-1/2 scale-75 transition-all duration-300"
-        >
-          <component
-            :is="slides[nextIndex].component"
-            class="w-full h-full bg-zinc-800 rounded-xl p-4 shadow-2xl"
-          />
-        </div>
-
-        <!-- Navigation Buttons -->
+        <!-- Boutons de navigation -->
         <button
           class="absolute left-8 top-1/2 -translate-y-1/2 p-3 bg-zinc-800 hover:bg-zinc-700 rounded-full transition-colors z-20"
-          @click.stop="prevSlide"
-          aria-label="Previous slide"
+          @click="prevSlide"
+          :disabled="isTransitioning"
         >
           <ChevronLeft class="w-8 h-8" />
+          <span class="sr-only">Précédent</span>
         </button>
 
         <button
           class="absolute right-8 top-1/2 -translate-y-1/2 p-3 bg-zinc-800 hover:bg-zinc-700 rounded-full transition-colors z-20"
-          @click.stop="nextSlide"
-          aria-label="Next slide"
+          @click="nextSlide"
+          :disabled="isTransitioning"
         >
           <ChevronRight class="w-8 h-8" />
+          <span class="sr-only">Suivant</span>
         </button>
       </div>
     </div>
   </Transition>
 </template>
-
-<style scoped>
-.modal-enter-active,
-.modal-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.modal-enter-from,
-.modal-leave-to {
-  opacity: 0;
-}
-
-.modal-enter-active .bg-zinc-800,
-.modal-leave-active .bg-zinc-800 {
-  transition: transform 0.3s ease-out;
-}
-
-.modal-enter-from .bg-zinc-800 {
-  transform: scale(0.95);
-}
-
-.modal-leave-to .bg-zinc-800 {
-  transform: scale(0.95);
-}
-</style>
