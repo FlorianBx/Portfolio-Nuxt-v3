@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount, defineAsyncComponent } from 'vue'
 import { ChevronLeft, ChevronRight } from 'lucide-vue-next'
 import gsap from 'gsap'
 

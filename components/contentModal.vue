@@ -52,14 +52,47 @@ const prevIndex = computed(() =>
 )
 const nextIndex = computed(() => (currentIndex.value + 1) % slides.length)
 
+// Gestion de la visibilité des slides
+const isSlideVisible = (index: number) => {
+  const total = slides.length
+  const curr = currentIndex.value
+
+  // Cas normal
+  if (Math.abs(index - curr) <= 1) return true
+
+  // Cas cyclique : dernier vers premier
+  if (curr === 0 && index === total - 1) return true
+
+  // Cas cyclique : premier vers dernier
+  if (curr === total - 1 && index === 0) return true
+
+  return false
+}
+
 // Navigation entre les slides
 const moveToSlide = (direction: 'next' | 'prev') => {
   if (isTransitioning.value) return
   isTransitioning.value = true
 
   const currentSlide = slideRefs.value[currentIndex.value]
-  const targetSlide = slideRefs.value[direction === 'next' ? nextIndex.value : prevIndex.value]
+  const targetIndex = direction === 'next' ? nextIndex.value : prevIndex.value
+  const targetSlide = slideRefs.value[targetIndex]
   const moveAmount = 100 * (direction === 'next' ? -1 : 1)
+
+  // Masquer tous les autres slides sauf current et target
+  slideRefs.value.forEach((slide, index) => {
+    if (index !== currentIndex.value && index !== targetIndex) {
+      gsap.set(slide, {
+        xPercent: 100,
+        scale: 0.8,
+        visibility: 'hidden',
+      })
+    } else {
+      gsap.set(slide, {
+        visibility: 'visible',
+      })
+    }
+  })
 
   gsap.to(currentSlide, {
     xPercent: moveAmount,
@@ -72,13 +105,14 @@ const moveToSlide = (direction: 'next' | 'prev') => {
     {
       xPercent: -moveAmount,
       scale: 0.8,
+      visibility: 'visible',
     },
     {
       xPercent: 0,
       scale: 1,
       duration: 0.4,
       onComplete: () => {
-        currentIndex.value = direction === 'next' ? nextIndex.value : prevIndex.value
+        currentIndex.value = targetIndex
         isTransitioning.value = false
       },
     }
@@ -94,14 +128,51 @@ const handleKeydown = (e: KeyboardEvent) => {
   if (e.key === 'ArrowLeft') moveToSlide('prev')
 }
 
-// Lifecycle hooks
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    if (newValue && props.initialSlideId) {
+      // Quand la modal s'ouvre, on force l'index sur la slide demandée
+      const newIndex = slides.findIndex((slide) => slide.id === props.initialSlideId)
+      if (newIndex !== -1) {
+        currentIndex.value = newIndex
+
+        // Réinitialiser les positions
+        slideRefs.value.forEach((slide, index) => {
+          gsap.set(slide, {
+            xPercent: 100,
+            scale: 0.8,
+            visibility: 'hidden',
+          })
+        })
+
+        gsap.set(slideRefs.value[newIndex], {
+          xPercent: 0,
+          scale: 1,
+          visibility: 'visible',
+        })
+      }
+    }
+  }
+)
+
 onMounted(() => {
   window.addEventListener('keydown', handleKeydown)
 
-  // Position initiale des slides
+  // Initialisation des slides
+  slideRefs.value.forEach((slide) => {
+    gsap.set(slide, {
+      xPercent: 100,
+      scale: 0.8,
+      visibility: 'hidden',
+    })
+  })
+
+  // Positionner uniquement la slide initiale
   gsap.set(slideRefs.value[currentIndex.value], {
     xPercent: 0,
     scale: 1,
+    visibility: 'visible',
   })
 })
 
@@ -130,6 +201,10 @@ onBeforeUnmount(() => {
           :key="slide.id"
           ref="slideRefs"
           class="absolute rounded-lg left-[10vw] right-[10vw] h-[80vh] bg-zinc-800 shadow-lg"
+          :style="{
+            zIndex: index === currentIndex ? 2 : 1,
+            visibility: isSlideVisible(index) ? 'visible' : 'hidden',
+          }"
           :class="{ 'pointer-events-none': index !== currentIndex }"
         >
           <div class="h-full">
@@ -154,10 +229,9 @@ onBeforeUnmount(() => {
         <div class="absolute right-0 w-[8vw] h-[65vh] bg-zinc-800 rounded-lg" />
       </div>
 
-      <!-- Boutons de navigation -->
       <button
         class="absolute left-8 top-1/2 -translate-y-1/2 p-3 bg-zinc-900 hover:bg-zinc-700 rounded-full transition-colors z-20"
-        @click="prevSlide"
+        @click="() => moveToSlide('prev')"
         :disabled="isTransitioning"
       >
         <ChevronLeft class="w-8 h-8" />
@@ -166,7 +240,7 @@ onBeforeUnmount(() => {
 
       <button
         class="absolute right-8 top-1/2 -translate-y-1/2 p-3 bg-zinc-900 hover:bg-zinc-700 rounded-full transition-colors z-20"
-        @click="nextSlide"
+        @click="() => moveToSlide('next')"
         :disabled="isTransitioning"
       >
         <ChevronRight class="w-8 h-8" />
