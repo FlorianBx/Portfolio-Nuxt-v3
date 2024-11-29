@@ -9,6 +9,7 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@nuxt/content',
     '@nuxt/fonts',
+    '@pinia/nuxt',
   ],
   fonts: {
     families: [{ name: 'Bebas Neue', provider: 'google' }],
@@ -17,4 +18,3 @@ export default defineNuxtConfig({
     configPath: './tailwind.config.ts',
   },
 })
-
