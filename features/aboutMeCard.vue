@@ -14,7 +14,8 @@ const openModal = () => {
   >
     <h2 class="font-bold mb-8 uppercase z-20">about me</h2>
     <p class="absolute bottom-24 text-4xl opacity-90 font-bebas-title z-20">
-      Hey I'm Florian 👋, Vue.js specialist. Accessibility advocate.
+      Hey I'm Florian <span aria-hidden="true" class="waving-hand">👋</span>, Vue.js specialist.
+      Accessibility advocate.
     </p>
     <p class="absolute text-2xl bottom-6 mt-4 font-bebas-title rounded block text-emerald-300 z-20">
       Co-organizer of Vue.js Paris meetup.
@@ -35,3 +36,38 @@ const openModal = () => {
     <ContentModal v-model="isModalOpen" initial-slide-id="about" />
   </article>
 </template>
+
+<style scoped>
+article:hover .waving-hand {
+  display: inline-block;
+  animation: wave 2.5s infinite;
+  transform-origin: 70% 70%;
+}
+
+@keyframes wave {
+  0% {
+    transform: rotate(0deg);
+  }
+  10% {
+    transform: rotate(14deg);
+  }
+  20% {
+    transform: rotate(-8deg);
+  }
+  30% {
+    transform: rotate(14deg);
+  }
+  40% {
+    transform: rotate(-4deg);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+  60% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+</style>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, defineAsyncComponent } from 'vue'
 import { ChevronLeft, ChevronRight, X as XIcon } from 'lucide-vue-next'
 import gsap from 'gsap'
 
@@ -19,8 +19,8 @@ const emit = defineEmits<{
   'update:modelValue': [value: boolean]
 }>()
 
-const ANIMATION_DURATION = 0.4 // 400ms
-const PREVIEW_WIDTH = 300 // width of preview slides in pixels
+const ANIMATION_DURATION = 0.4
+const PREVIEW_WIDTH = 300
 
 const slides = [
   {
@@ -132,14 +132,12 @@ const handleKeydown = (e: KeyboardEvent) => {
   if (e.key === 'ArrowLeft') prevSlide()
 }
 
-// Set up keyboard navigation
 onMounted(() => {
   window.addEventListener('keydown', handleKeydown)
 
-  // Set initial positions
   gsap.set(slideRefs.value[prevIndex.value], {
     xPercent: -PREVIEW_WIDTH,
-    scale: 0.75,
+    scale: 0.4,
     zIndex: 5,
   })
 
@@ -159,9 +157,6 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', handleKeydown)
 })
-const PREVIEW_OPACITY = 0.15
-const PREVIEW_SCALE = 0.85
-const PREVIEW_PEEK = 100 // pixels visibles du slide adjacent
 </script>
 
 <template>
@@ -175,60 +170,57 @@ const PREVIEW_PEEK = 100 // pixels visibles du slide adjacent
       <div class="absolute inset-0 bg-black/85 backdrop-blur-sm" aria-hidden="true" />
 
       <div class="relative w-full h-[90vh] flex items-center justify-center">
-        <!-- Carte globale dark -->
-        <div class="absolute w-[95vw] h-[90vh] bg-zinc-800/50 rounded-3xl overflow-hidden">
-          <!-- Slide précédent -->
-          <div class="absolute left-0 w-[15vw] h-full bg-zinc-800 rounded-3xl" />
+        <!-- Slide précédent -->
+        <div class="absolute left-0 w-[8vw] h-[65vh] bg-zinc-800 rounded-lg" />
 
-          <!-- Container du slide actif -->
-          <div
-            v-for="(slide, index) in slides"
-            :key="slide.id"
-            ref="slideRefs"
-            class="absolute left-[15vw] right-[15vw] h-full bg-zinc-800 shadow-2xl"
-            :class="{ 'pointer-events-none': index !== currentIndex }"
-          >
-            <div class="h-full">
-              <div class="flex justify-between items-center p-8">
-                <h2 class="text-xl font-bold text-white">{{ slide.title }}</h2>
-                <button
-                  v-if="index === currentIndex"
-                  class="p-2 hover:bg-zinc-700 rounded-full transition-colors"
-                  @click="closeModal"
-                >
-                  <XIcon class="w-6 h-6" />
-                </button>
-              </div>
+        <!-- Container du slide actif -->
+        <div
+          v-for="(slide, index) in slides"
+          :key="slide.id"
+          ref="slideRefs"
+          class="absolute rounded-lg left-[10vw] right-[10vw] h-[80vh] bg-zinc-800 shadow-lg"
+          :class="{ 'pointer-events-none': index !== currentIndex }"
+        >
+          <div class="h-full">
+            <div class="flex justify-between items-center p-8">
+              <h2 class="text-xl font-bold text-white">{{ slide.title }}</h2>
+              <button
+                v-if="index === currentIndex"
+                class="p-2 bg-zinc-900 hover:bg-zinc-600 rounded-full transition-colors"
+                @click="closeModal"
+              >
+                <XIcon class="w-6 h-6" />
+              </button>
+            </div>
 
-              <div class="h-[calc(100%-5rem)] overflow-auto p-8 pt-0">
-                <component :is="slide.component" />
-              </div>
+            <div class="h-[calc(100%-5rem)] overflow-auto p-8 pt-0">
+              <component :is="slide.component" />
             </div>
           </div>
-
-          <!-- Slide suivant -->
-          <div class="absolute right-0 w-[15vw] h-full bg-zinc-800 rounded-3xl" />
         </div>
 
-        <!-- Boutons de navigation -->
-        <button
-          class="absolute left-8 top-1/2 -translate-y-1/2 p-3 bg-zinc-800 hover:bg-zinc-700 rounded-full transition-colors z-20"
-          @click="prevSlide"
-          :disabled="isTransitioning"
-        >
-          <ChevronLeft class="w-8 h-8" />
-          <span class="sr-only">Précédent</span>
-        </button>
-
-        <button
-          class="absolute right-8 top-1/2 -translate-y-1/2 p-3 bg-zinc-800 hover:bg-zinc-700 rounded-full transition-colors z-20"
-          @click="nextSlide"
-          :disabled="isTransitioning"
-        >
-          <ChevronRight class="w-8 h-8" />
-          <span class="sr-only">Suivant</span>
-        </button>
+        <!-- Slide suivant -->
+        <div class="absolute right-0 w-[8vw] h-[65vh] bg-zinc-800 rounded-lg" />
       </div>
+
+      <!-- Boutons de navigation -->
+      <button
+        class="absolute left-8 top-1/2 -translate-y-1/2 p-3 bg-zinc-900 hover:bg-zinc-700 rounded-full transition-colors z-20"
+        @click="prevSlide"
+        :disabled="isTransitioning"
+      >
+        <ChevronLeft class="w-8 h-8" />
+        <span class="sr-only">Précédent</span>
+      </button>
+
+      <button
+        class="absolute right-8 top-1/2 -translate-y-1/2 p-3 bg-zinc-900 hover:bg-zinc-700 rounded-full transition-colors z-20"
+        @click="nextSlide"
+        :disabled="isTransitioning"
+      >
+        <ChevronRight class="w-8 h-8" />
+        <span class="sr-only">Suivant</span>
+      </button>
     </div>
   </Transition>
 </template>
