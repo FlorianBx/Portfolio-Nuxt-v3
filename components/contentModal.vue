@@ -3,6 +3,7 @@ import { ref, computed, onMounted, onBeforeUnmount, defineAsyncComponent } from 
 import { ChevronLeft, ChevronRight, X as XIcon } from 'lucide-vue-next'
 import gsap from 'gsap'
 
+// Types
 interface Slide {
   id: string
   component: any
@@ -19,9 +20,7 @@ const emit = defineEmits<{
   'update:modelValue': [value: boolean]
 }>()
 
-const ANIMATION_DURATION = 0.4
-const PREVIEW_WIDTH = 300
-
+// Configuration du carousel
 const slides = [
   {
     id: 'about',
@@ -40,117 +39,69 @@ const slides = [
   },
 ] as Slide[]
 
+// État local
 const currentIndex = ref(
   props.initialSlideId ? slides.findIndex((slide) => slide.id === props.initialSlideId) : 0
 )
-
-const prevIndex = computed(() =>
-  currentIndex.value === 0 ? slides.length - 1 : currentIndex.value - 1
-)
-
-const nextIndex = computed(() => (currentIndex.value + 1) % slides.length)
-
 const isTransitioning = ref(false)
 const slideRefs = ref<HTMLElement[]>([])
 
-const animateSlide = (element: HTMLElement, fromVars: gsap.TweenVars, toVars: gsap.TweenVars) => {
-  return gsap.fromTo(
-    element,
+// Computed values pour la navigation
+const prevIndex = computed(() =>
+  currentIndex.value === 0 ? slides.length - 1 : currentIndex.value - 1
+)
+const nextIndex = computed(() => (currentIndex.value + 1) % slides.length)
+
+// Navigation entre les slides
+const moveToSlide = (direction: 'next' | 'prev') => {
+  if (isTransitioning.value) return
+  isTransitioning.value = true
+
+  const currentSlide = slideRefs.value[currentIndex.value]
+  const targetSlide = slideRefs.value[direction === 'next' ? nextIndex.value : prevIndex.value]
+  const moveAmount = 100 * (direction === 'next' ? -1 : 1)
+
+  gsap.to(currentSlide, {
+    xPercent: moveAmount,
+    scale: 0.8,
+    duration: 0.4,
+  })
+
+  gsap.fromTo(
+    targetSlide,
     {
-      ...fromVars,
-      duration: ANIMATION_DURATION,
-      ease: 'power2.inOut',
+      xPercent: -moveAmount,
+      scale: 0.8,
     },
     {
-      ...toVars,
-      duration: ANIMATION_DURATION,
-      ease: 'power2.inOut',
+      xPercent: 0,
+      scale: 1,
+      duration: 0.4,
+      onComplete: () => {
+        currentIndex.value = direction === 'next' ? nextIndex.value : prevIndex.value
+        isTransitioning.value = false
+      },
     }
   )
 }
 
-const handleTransition = async (direction: 'next' | 'prev') => {
-  if (isTransitioning.value) return
-  isTransitioning.value = true
-
-  const timeline = gsap.timeline()
-  const currentSlide = slideRefs.value[currentIndex.value]
-  const targetSlide = slideRefs.value[direction === 'next' ? nextIndex.value : prevIndex.value]
-  const xOffset = direction === 'next' ? -PREVIEW_WIDTH : PREVIEW_WIDTH
-
-  // Animate current slide out
-  timeline.add(
-    animateSlide(
-      currentSlide,
-      {
-        xPercent: 0,
-        scale: 1,
-        zIndex: 10,
-      },
-      {
-        xPercent: -xOffset,
-        scale: 0.75,
-        zIndex: 5,
-      }
-    )
-  )
-
-  // Animate target slide in
-  timeline.add(
-    animateSlide(
-      targetSlide,
-      {
-        xPercent: xOffset,
-        scale: 0.75,
-        zIndex: 5,
-      },
-      {
-        xPercent: 0,
-        scale: 1,
-        zIndex: 10,
-      }
-    ),
-    '-=0.4'
-  )
-
-  timeline.then(() => {
-    currentIndex.value = direction === 'next' ? nextIndex.value : prevIndex.value
-    isTransitioning.value = false
-  })
-}
-
-const nextSlide = () => handleTransition('next')
-const prevSlide = () => handleTransition('prev')
-
-const closeModal = () => {
-  emit('update:modelValue', false)
-}
+// Handlers
+const closeModal = () => emit('update:modelValue', false)
 
 const handleKeydown = (e: KeyboardEvent) => {
   if (e.key === 'Escape') closeModal()
-  if (e.key === 'ArrowRight') nextSlide()
-  if (e.key === 'ArrowLeft') prevSlide()
+  if (e.key === 'ArrowRight') moveToSlide('next')
+  if (e.key === 'ArrowLeft') moveToSlide('prev')
 }
 
+// Lifecycle hooks
 onMounted(() => {
   window.addEventListener('keydown', handleKeydown)
 
-  gsap.set(slideRefs.value[prevIndex.value], {
-    xPercent: -PREVIEW_WIDTH,
-    scale: 0.4,
-    zIndex: 5,
-  })
-
+  // Position initiale des slides
   gsap.set(slideRefs.value[currentIndex.value], {
     xPercent: 0,
     scale: 1,
-    zIndex: 10,
-  })
-
-  gsap.set(slideRefs.value[nextIndex.value], {
-    xPercent: PREVIEW_WIDTH,
-    scale: 0.75,
-    zIndex: 5,
   })
 })
 
