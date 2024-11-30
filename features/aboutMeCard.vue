@@ -1,16 +1,20 @@
 <script setup lang="ts">
 import { CirclePlus } from 'lucide-vue-next'
+import { useModalStore } from '@/stores/useModalStore'
 import ContentModal from '../components/contentModal.vue'
 
-const isModalOpen = ref(false)
+const modalStore = useModalStore()
 const openModal = () => {
-  isModalOpen.value = true
+  modalStore.openModal('about')
 }
 </script>
 
 <template>
   <article
-    class="relative lg shadow-lg bg-zinc-800 rounded-xl p-8 overflow-hidden col-span-1 md:col-span-1 row-span-4"
+    aria-label="about me"
+    role="navigation"
+    class="relative cursor-pointer lg shadow-lg bg-zinc-800 rounded-xl p-8 overflow-hidden col-span-1 md:col-span-1 row-span-4"
+    @click="openModal"
   >
     <h2 class="font-bold mb-8 uppercase z-20">about me</h2>
     <p class="absolute bottom-24 text-4xl opacity-90 font-bebas-title z-20">
@@ -28,12 +32,12 @@ const openModal = () => {
       src="https://media.licdn.com/dms/image/v2/D4E03AQEWzb2EhoGTyw/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1696890004250?e=1738195200&v=beta&t=gUiVugdtJgrxNjiq_4w5w449DR1wvK8xwqvBTdEk4Ho"
       alt="Florian Beaumont"
     >
-    <button class="absolute bottom-4 right-4" @click="openModal">
+    <button class="absolute bottom-4 right-4">
       <CirclePlus class="w-8 h-8" />
       <span class="sr-only">En savoir plus</span>
     </button>
 
-    <ContentModal v-model="isModalOpen" initial-slide-id="about" />
+    <ContentModal v-model="modalStore.isOpen" :initial-slide-id="modalStore.currentSlideId" />
   </article>
 </template>
 

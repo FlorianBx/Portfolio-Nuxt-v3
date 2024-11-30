@@ -9,7 +9,6 @@ import LatestTalkCard from '../features/latestTalkCard.vue'
 
 <template>
   <section class="grid grid-cols-1 md:grid-cols-3 grid-rows-6 gap-6 h-[calc(100vh-8rem)]">
-    <!-- Les classes col-span et row-span sont maintenant dans les composants enfants -->
     <AboutMeCard class="col-span-1 row-span-4" />
     <LastProjectCard class="col-span-1 row-span-4" />
     <ContactCard class="col-span-1 row-span-2" />
