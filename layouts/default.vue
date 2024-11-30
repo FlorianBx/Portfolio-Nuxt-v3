@@ -24,7 +24,7 @@ useHead({
     },
     {
       name: 'og:image:alt',
-      content: 'portfolio-the-good-one',
+      content: 'Florian Beaumont - portfolio',
     },
     {
       name: 'twitter:card',
@@ -53,10 +53,13 @@ useHead({
 <template>
   <div class="min-h-screen bg-gray-100 text-gray-900 dark:bg-stone-900 dark:text-stone-100 p-8">
     <header class="h-16 pl-1 mb-4">
-      <h1 class="text-4xl font-bold">
-        <span class="text-emerald-400">F</span>ront-end deve<span class="text-emerald-400">lo</span
-        >per
-      </h1>
+      <NuxtLink to="/" class="text-4xl font-bold">
+        <h1 class="text-4xl font-bold">
+          <span class="text-emerald-400">F</span>ront-end deve<span class="text-emerald-400"
+            >lo</span
+          >per
+        </h1>
+      </NuxtLink>
     </header>
     <main>
       <slot />

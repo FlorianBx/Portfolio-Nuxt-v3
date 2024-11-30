@@ -1,43 +1,62 @@
 <script setup lang="ts">
 import { CirclePlus } from 'lucide-vue-next'
-import ArticleItem from '../components/ArticleItem.vue'
-
-defineOptions({
-  inheritAttrs: false,
-})
+import ArticleItem from '../components/articleItem.vue'
+import { useModalStore } from '@/stores/useModalStore'
 
 interface Article {
   title: string
   description: string
+  _path: string
+  createdAt: string
 }
 
-const articles: Article[] = [
-  {
-    title: 'Vue A11y Tools',
-    description: "Collection d'outils pour améliorer l'accessibilité des applications Vue.js",
-  },
-  {
-    title: 'Nuxt Content Blog',
-    description: 'Template de blog accessible avec Nuxt Content',
-  },
-  {
-    title: 'Tailwind CSS',
-    description: 'Framework CSS open source pour la création de feuilles de styles',
-  },
-]
+const { data: articles } = await useAsyncData('articles', () =>
+  queryContent('blog').sort({ createdAt: -1 }).limit(3).find()
+)
+
+const isLoading = ref(false)
+const error = ref<Error | null>(null)
+
+const modalStore = useModalStore()
+
+const openModal = () => {
+  modalStore.openModal('blog')
+}
 </script>
 
 <template>
-  <article class="relative shadow-lg bg-zinc-800 rounded-xl p-8" :class="$attrs.class">
+  <article
+    role="dialog"
+    @click="openModal"
+    class="relative shadow-lg cursor-pointer bg-zinc-800 rounded-xl p-8"
+  >
     <h2 class="font-bold mb-8 uppercase">Blog & Articles</h2>
-    <div class="space-y-4">
+
+    <div v-if="isLoading" class="flex justify-center items-center h-32">
+      <span class="loading">Chargement des articles...</span>
+    </div>
+
+    <div v-else-if="error" class="text-red-400 p-4">
+      Une erreur est survenue lors du chargement des articles.
+    </div>
+
+    <div v-else class="space-y-4">
       <ArticleItem
         v-for="article in articles"
-        :key="article.title"
+        :key="article._path"
         :title="article.title"
         :description="article.description"
+        @click="navigateTo(article._path)"
       />
     </div>
     <CirclePlus class="absolute bottom-4 right-4" />
+
+    <ContentModal v-model="modalStore.isOpen" :initial-slide-id="modalStore.currentSlideId" />
   </article>
 </template>
+
+<style scoped>
+.loading {
+  @apply text-emerald-400 text-sm;
+}
+</style>
