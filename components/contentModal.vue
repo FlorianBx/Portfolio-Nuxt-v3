@@ -184,7 +184,7 @@ onBeforeUnmount(() => {
       role="dialog"
       aria-modal="true"
     >
-      <div class="absolute inset-0 bg-black/85 backdrop-blur-sm" aria-hidden="true" />
+      <div class="absolute inset-0 bg-black/20 backdrop-blur-sm" aria-hidden="true" />
 
       <div class="relative w-full h-[90vh] flex items-center justify-center">
         <div aria-hidden="true" class="absolute left-0 w-[8vw] h-[65vh] bg-zinc-800 rounded-lg" />
