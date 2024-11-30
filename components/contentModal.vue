@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount, defineAsyncComponent } from 'vue'
+import { ref, watch, computed, onMounted, onBeforeUnmount, defineAsyncComponent } from 'vue'
 import { ChevronLeft, ChevronRight, X as XIcon } from 'lucide-vue-next'
-import { useModalStore } from '@/stores/useModalStore'
+import { useModalStore } from '../stores/useModalStore'
 import gsap from 'gsap'
 
 interface Slide {
@@ -121,6 +121,8 @@ const handleKeydown = (e: KeyboardEvent) => {
   if (e.key === 'Escape') closeModal()
   if (e.key === 'ArrowRight') moveToSlide('next')
   if (e.key === 'ArrowLeft') moveToSlide('prev')
+  if (e.key === 'l') moveToSlide('next')
+  if (e.key === 'h') moveToSlide('prev')
 }
 
 watch(
@@ -174,7 +176,8 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <Transition name="modal">
+  <!-- <Transition name="modal"> -->
+  <div>
     <div
       v-if="modelValue"
       class="fixed inset-0 z-50 flex items-center justify-center"
@@ -235,7 +238,8 @@ onBeforeUnmount(() => {
         <span class="sr-only">Suivant</span>
       </button>
     </div>
-  </Transition>
+    <!-- </Transition> -->
+  </div>
 </template>
 
 <style scoped>

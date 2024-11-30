@@ -24,9 +24,10 @@ const openModal = () => {
     <p class="absolute text-2xl bottom-6 mt-4 font-bebas-title rounded block text-emerald-300 z-20">
       Co-organizer of Vue.js Paris meetup.
     </p>
-    <div
-      class="absolute w-full h-full top-0 left-0 bg-gradient-to-t from-emerald-500/20 to-transparent"
-    />
+    <!-- <div -->
+    <!--   class="absolute w-full h-full top-0 left-0 bg-gradient-to-t from-emerald-500/20 to-transparent" -->
+    <!-- /> -->
+
     <img
       class="absolute w-full h-full top-0 left-0 object-cover opacity-20 grayscale"
       src="https://media.licdn.com/dms/image/v2/D4E03AQEWzb2EhoGTyw/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1696890004250?e=1738195200&v=beta&t=gUiVugdtJgrxNjiq_4w5w449DR1wvK8xwqvBTdEk4Ho"
