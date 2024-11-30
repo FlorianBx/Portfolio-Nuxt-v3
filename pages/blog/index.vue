@@ -73,7 +73,7 @@ const filteredArticles = computed(() => {
     </section>
 
     <section class="space-y-6">
-      <div class="flex flex-col sm:flex-row gap-4 items-center justify-between">
+      <div class="flex flex-col gap-4 items-start justify-between">
         <div class="flex gap-3 overflow-x-auto pb-2 w-full sm:w-auto">
           <button
             v-for="category in categories"
@@ -91,14 +91,14 @@ const filteredArticles = computed(() => {
         </div>
 
         <!-- Barre de recherche -->
-        <div class="relative w-full sm:w-64">
+        <div class="flex flex-col relative w-full">
           <input
             v-model="searchQuery"
             type="search"
             placeholder="Rechercher..."
             class="max-w-4xl px-4 py-6 pl-10 h-10 bg-zinc-800 rounded-lg text-zinc-300 focus:outline-none focus:ring-2 focus:ring-emerald-400"
           />
-          <Search class="absolute top-1 left-4 w-48 h-32 text-zinc-400" />
+          <Search class="absolute top-3 left-2 w-6 h-6 text-zinc-400" />
         </div>
       </div>
 
