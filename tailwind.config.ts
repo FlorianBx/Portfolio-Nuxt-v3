@@ -12,8 +12,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        x: ['Bebas Neue'],
+        'bebas-neue': ['"Bebas Neue"', 'cursive', 'sans-serif'],
       },
     },
   },
+  plugins: [require('@tailwindcss/typography')],
 }

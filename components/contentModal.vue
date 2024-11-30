@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount, defineAsyncComponent } from 'vue'
+import { ref, watch, computed, onMounted, onBeforeUnmount, defineAsyncComponent } from 'vue'
 import { ChevronLeft, ChevronRight, X as XIcon } from 'lucide-vue-next'
+import { useModalStore } from '../stores/useModalStore'
 import gsap from 'gsap'
 
-// Types
 interface Slide {
   id: string
   component: any
@@ -20,7 +20,8 @@ const emit = defineEmits<{
   'update:modelValue': [value: boolean]
 }>()
 
-// Configuration du carousel
+const modalStore = useModalStore()
+
 const slides = [
   {
     id: 'about',
@@ -39,37 +40,28 @@ const slides = [
   },
 ] as Slide[]
 
-// État local
 const currentIndex = ref(
   props.initialSlideId ? slides.findIndex((slide) => slide.id === props.initialSlideId) : 0
 )
 const isTransitioning = ref(false)
 const slideRefs = ref<HTMLElement[]>([])
 
-// Computed values pour la navigation
 const prevIndex = computed(() =>
   currentIndex.value === 0 ? slides.length - 1 : currentIndex.value - 1
 )
 const nextIndex = computed(() => (currentIndex.value + 1) % slides.length)
 
-// Gestion de la visibilité des slides
 const isSlideVisible = (index: number) => {
   const total = slides.length
   const curr = currentIndex.value
 
-  // Cas normal
   if (Math.abs(index - curr) <= 1) return true
-
-  // Cas cyclique : dernier vers premier
   if (curr === 0 && index === total - 1) return true
-
-  // Cas cyclique : premier vers dernier
   if (curr === total - 1 && index === 0) return true
 
   return false
 }
 
-// Navigation entre les slides
 const moveToSlide = (direction: 'next' | 'prev') => {
   if (isTransitioning.value) return
   isTransitioning.value = true
@@ -79,7 +71,8 @@ const moveToSlide = (direction: 'next' | 'prev') => {
   const targetSlide = slideRefs.value[targetIndex]
   const moveAmount = 100 * (direction === 'next' ? -1 : 1)
 
-  // Masquer tous les autres slides sauf current et target
+  modalStore.setCurrentSlide(slides[targetIndex].id)
+
   slideRefs.value.forEach((slide, index) => {
     if (index !== currentIndex.value && index !== targetIndex) {
       gsap.set(slide, {
@@ -97,7 +90,7 @@ const moveToSlide = (direction: 'next' | 'prev') => {
   gsap.to(currentSlide, {
     xPercent: moveAmount,
     scale: 0.8,
-    duration: 0.4,
+    duration: 0.3,
   })
 
   gsap.fromTo(
@@ -110,7 +103,7 @@ const moveToSlide = (direction: 'next' | 'prev') => {
     {
       xPercent: 0,
       scale: 1,
-      duration: 0.4,
+      duration: 0.3,
       onComplete: () => {
         currentIndex.value = targetIndex
         isTransitioning.value = false
@@ -119,26 +112,29 @@ const moveToSlide = (direction: 'next' | 'prev') => {
   )
 }
 
-// Handlers
-const closeModal = () => emit('update:modelValue', false)
+const closeModal = () => {
+  modalStore.closeModal()
+  emit('update:modelValue', false)
+}
 
 const handleKeydown = (e: KeyboardEvent) => {
   if (e.key === 'Escape') closeModal()
   if (e.key === 'ArrowRight') moveToSlide('next')
   if (e.key === 'ArrowLeft') moveToSlide('prev')
+  if (e.key === 'l') moveToSlide('next')
+  if (e.key === 'h') moveToSlide('prev')
 }
 
 watch(
-  () => props.modelValue,
+  () => modalStore.isOpen,
   (newValue) => {
+    emit('update:modelValue', newValue)
     if (newValue && props.initialSlideId) {
-      // Quand la modal s'ouvre, on force l'index sur la slide demandée
       const newIndex = slides.findIndex((slide) => slide.id === props.initialSlideId)
       if (newIndex !== -1) {
         currentIndex.value = newIndex
 
-        // Réinitialiser les positions
-        slideRefs.value.forEach((slide, index) => {
+        slideRefs.value.forEach((slide) => {
           gsap.set(slide, {
             xPercent: 100,
             scale: 0.8,
@@ -159,7 +155,6 @@ watch(
 onMounted(() => {
   window.addEventListener('keydown', handleKeydown)
 
-  // Initialisation des slides
   slideRefs.value.forEach((slide) => {
     gsap.set(slide, {
       xPercent: 100,
@@ -168,7 +163,6 @@ onMounted(() => {
     })
   })
 
-  // Positionner uniquement la slide initiale
   gsap.set(slideRefs.value[currentIndex.value], {
     xPercent: 0,
     scale: 1,
@@ -182,20 +176,19 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <Transition name="modal">
+  <!-- <Transition name="modal"> -->
+  <div>
     <div
       v-if="modelValue"
       class="fixed inset-0 z-50 flex items-center justify-center"
       role="dialog"
       aria-modal="true"
     >
-      <div class="absolute inset-0 bg-black/85 backdrop-blur-sm" aria-hidden="true" />
+      <div class="absolute inset-0 bg-black/20 backdrop-blur-sm" aria-hidden="true" />
 
       <div class="relative w-full h-[90vh] flex items-center justify-center">
-        <!-- Slide précédent -->
-        <div class="absolute left-0 w-[8vw] h-[65vh] bg-zinc-800 rounded-lg" />
+        <div aria-hidden="true" class="absolute left-0 w-[8vw] h-[65vh] bg-zinc-800 rounded-lg" />
 
-        <!-- Container du slide actif -->
         <div
           v-for="(slide, index) in slides"
           :key="slide.id"
@@ -208,12 +201,11 @@ onBeforeUnmount(() => {
           :class="{ 'pointer-events-none': index !== currentIndex }"
         >
           <div class="h-full">
-            <div class="flex justify-between items-center p-8">
-              <h2 class="text-xl font-bold text-white">{{ slide.title }}</h2>
+            <div class="relative flex justify-between items-center p-8">
               <button
                 v-if="index === currentIndex"
-                class="p-2 bg-zinc-900 hover:bg-zinc-600 rounded-full transition-colors"
-                @click="closeModal"
+                class="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-zinc-900 hover:bg-zinc-600 rounded-full transition-colors"
+                @click.stop="closeModal"
               >
                 <XIcon class="w-6 h-6" />
               </button>
@@ -225,8 +217,7 @@ onBeforeUnmount(() => {
           </div>
         </div>
 
-        <!-- Slide suivant -->
-        <div class="absolute right-0 w-[8vw] h-[65vh] bg-zinc-800 rounded-lg" />
+        <div aria-hidden="true" class="absolute right-0 w-[8vw] h-[65vh] bg-zinc-800 rounded-lg" />
       </div>
 
       <button
@@ -247,5 +238,19 @@ onBeforeUnmount(() => {
         <span class="sr-only">Suivant</span>
       </button>
     </div>
-  </Transition>
+    <!-- </Transition> -->
+  </div>
 </template>
+
+<style scoped>
+/* .modal-enter-active, */
+/* .modal-leave-active { */
+/*   transition: all 0.3s ease; */
+/* } */
+/**/
+/* .modal-enter-from, */
+/* .modal-leave-to { */
+/*   opacity: 0; */
+/*   transform: scale(0.8); */
+/* } */
+</style>
