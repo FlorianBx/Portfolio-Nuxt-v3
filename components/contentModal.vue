@@ -3,7 +3,8 @@ import { ref, computed, onMounted, onBeforeUnmount, defineAsyncComponent } from 
 import { ChevronLeft, ChevronRight, X as XIcon } from 'lucide-vue-next'
 import gsap from 'gsap'
 
-// Types
+// TODO: faire disparaitre la croix de la modale quand l'animation est trigger
+
 interface Slide {
   id: string
   component: any
@@ -20,7 +21,6 @@ const emit = defineEmits<{
   'update:modelValue': [value: boolean]
 }>()
 
-// Configuration du carousel
 const slides = [
   {
     id: 'about',
@@ -119,7 +119,6 @@ const moveToSlide = (direction: 'next' | 'prev') => {
   )
 }
 
-// Handlers
 const closeModal = () => emit('update:modelValue', false)
 
 const handleKeydown = (e: KeyboardEvent) => {
@@ -208,11 +207,11 @@ onBeforeUnmount(() => {
           :class="{ 'pointer-events-none': index !== currentIndex }"
         >
           <div class="h-full">
-            <div class="flex justify-between items-center p-8">
-              <h2 class="text-xl font-bold text-white">{{ slide.title }}</h2>
+            <div class="relative flex justify-between items-center p-8">
+              <!-- <h2 class="text-xl font-bold text-white">{{ slide.title }}</h2> -->
               <button
                 v-if="index === currentIndex"
-                class="p-2 bg-zinc-900 hover:bg-zinc-600 rounded-full transition-colors"
+                class="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-zinc-900 hover:bg-zinc-600 rounded-full transition-colors"
                 @click="closeModal"
               >
                 <XIcon class="w-6 h-6" />
