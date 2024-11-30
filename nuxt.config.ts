@@ -17,4 +17,17 @@ export default defineNuxtConfig({
   tailwindcss: {
     configPath: './tailwind.config.ts',
   },
+  content: {
+    highlight: {
+      theme: 'nord',
+      preload: ['typescript', 'vue', 'bash', 'json', 'diff', 'javascript'],
+    },
+    markdown: {
+      toc: {
+        depth: 3,
+        searchDepth: 3,
+      },
+    },
+  },
 })
+

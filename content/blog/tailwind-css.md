@@ -11,15 +11,6 @@ tags:
 draft: false
 ---
 
-<template>
-    <NuxtLink
-      to="/"
-      class="inline-flex items-center gap-2 px-6 py-3 bg-emerald-400 text-zinc-900 rounded-lg hover:bg-emerald-500 transition-colors"
-    >
-     retour 
-      <ArrowUpRight class="w-5 h-5" />
-    </NuxtLink>
-  </template>
 # Maîtriser Tailwind CSS pour des interfaces modernes
 
 Tailwind CSS révolutionne la façon dont nous écrivons nos styles. Découvrons pourquoi ce framework utility-first est devenu incontournable.
