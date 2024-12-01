@@ -123,13 +123,13 @@
         "../node_modules/.pnpm/@nuxtjs+i18n@9.1.0_@vue+compiler-dom@3.5.13_eslint@9.15.0_jiti@2.4.0__magicast@0.3.5_rollup@4_ylgkntoct7vzohuilx77c6sgle/node_modules/@nuxtjs/i18n/dist/types"
       ],
       "#mdc-configs": [
-        "./mdc-configs"
+        "./mdc-configs.mjs"
       ],
       "#mdc-highlighter": [
-        "./mdc-highlighter"
+        "./mdc-highlighter.mjs"
       ],
       "#mdc-imports": [
-        "./mdc-imports"
+        "./mdc-imports.mjs"
       ],
       "#vue-router": [
         "../node_modules/.pnpm/vue-router@4.5.0_vue@3.5.13_typescript@5.7.2_/node_modules/vue-router"

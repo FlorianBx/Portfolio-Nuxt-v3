@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { CodeIcon, HeartIcon, UsersIcon, BookOpenIcon } from 'lucide-vue-next'
+import { CodeIcon, HeartIcon, UsersIcon, BookOpenIcon, User } from 'lucide-vue-next'
 
 interface Skill {
   icon: any
@@ -39,7 +39,10 @@ const skills = ref<Skill[]>([
 <template>
   <div class="max-w-5xl mx-auto space-y-12 py-8">
     <section class="space-y-6">
-      <h1 class="text-5xl font-bebas text-emerald-400">Profil</h1>
+      <div class="flex items-center justify-between">
+        <h1 class="text-5xl font-bebas text-emerald-400">Profil</h1>
+        <User class="w-8 h-8 text-emerald-400" />
+      </div>
       <div class="space-y-4">
         <h2 class="text-4xl font-bold">
           Un développeur frontend

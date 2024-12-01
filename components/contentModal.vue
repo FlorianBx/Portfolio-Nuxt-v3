@@ -38,6 +38,11 @@ const slides = [
     component: defineAsyncComponent(() => import('../features/modals/blogView.vue')),
     title: 'Blog',
   },
+  {
+    id: 'talk',
+    component: defineAsyncComponent(() => import('../features/modals/talksView.vue')),
+    title: 'Talks',
+  },
 ] as Slide[]
 
 const currentIndex = ref(
@@ -176,70 +181,73 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <!-- <Transition name="modal"> -->
-  <div>
-    <div
-      v-if="modelValue"
-      class="fixed inset-0 z-50 flex items-center justify-center"
-      role="dialog"
-      aria-modal="true"
-    >
-      <div class="absolute inset-0 bg-black/20 backdrop-blur-sm" aria-hidden="true" />
+  <Transition name="modal">
+    <div>
+      <div
+        v-if="modelValue"
+        class="fixed inset-0 z-50 flex items-center justify-center"
+        role="dialog"
+        aria-modal="true"
+      >
+        <div class="absolute inset-0 bg-black/20 backdrop-blur-sm" aria-hidden="true" />
 
-      <div class="relative w-full h-[90vh] flex items-center justify-center">
-        <div aria-hidden="true" class="absolute left-0 w-[8vw] h-[65vh] bg-zinc-800 rounded-lg" />
+        <div class="relative w-full h-[90vh] flex items-center justify-center">
+          <div aria-hidden="true" class="absolute left-0 w-[8vw] h-[65vh] bg-zinc-800 rounded-lg" />
 
-        <div
-          v-for="(slide, index) in slides"
-          :key="slide.id"
-          ref="slideRefs"
-          class="absolute rounded-lg left-[10vw] right-[10vw] h-[80vh] bg-zinc-800 shadow-lg"
-          :style="{
-            zIndex: index === currentIndex ? 2 : 1,
-            visibility: isSlideVisible(index) ? 'visible' : 'hidden',
-          }"
-          :class="{ 'pointer-events-none': index !== currentIndex }"
-        >
-          <div class="h-full">
-            <div class="relative flex justify-between items-center p-8">
-              <button
-                v-if="index === currentIndex"
-                class="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-zinc-900 hover:bg-zinc-600 rounded-full transition-colors"
-                @click.stop="closeModal"
-              >
-                <XIcon class="w-6 h-6" />
-              </button>
-            </div>
+          <div
+            v-for="(slide, index) in slides"
+            :key="slide.id"
+            ref="slideRefs"
+            class="absolute rounded-lg left-[10vw] right-[10vw] h-[80vh] bg-zinc-800 shadow-lg"
+            :style="{
+              zIndex: index === currentIndex ? 2 : 1,
+              visibility: isSlideVisible(index) ? 'visible' : 'hidden',
+            }"
+            :class="{ 'pointer-events-none': index !== currentIndex }"
+          >
+            <div class="h-full">
+              <div class="relative flex justify-between items-center p-8">
+                <button
+                  v-if="index === currentIndex"
+                  class="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-zinc-900 hover:bg-zinc-600 rounded-full transition-colors"
+                  @click.stop="closeModal"
+                >
+                  <XIcon class="w-6 h-6" />
+                </button>
+              </div>
 
-            <div class="h-[calc(100%-5rem)] overflow-auto p-8 pt-0">
-              <component :is="slide.component" />
+              <div class="h-[calc(100%-5rem)] overflow-auto p-8 pt-0">
+                <component :is="slide.component" />
+              </div>
             </div>
           </div>
+
+          <div
+            aria-hidden="true"
+            class="absolute right-0 w-[8vw] h-[65vh] bg-zinc-800 rounded-lg"
+          />
         </div>
 
-        <div aria-hidden="true" class="absolute right-0 w-[8vw] h-[65vh] bg-zinc-800 rounded-lg" />
+        <button
+          class="absolute left-8 top-1/2 -translate-y-1/2 p-3 bg-zinc-900 hover:bg-zinc-700 rounded-full transition-colors z-20"
+          @click="() => moveToSlide('prev')"
+          :disabled="isTransitioning"
+        >
+          <ChevronLeft class="w-8 h-8" />
+          <span class="sr-only">Précédent</span>
+        </button>
+
+        <button
+          class="absolute right-8 top-1/2 -translate-y-1/2 p-3 bg-zinc-900 hover:bg-zinc-700 rounded-full transition-colors z-20"
+          @click="() => moveToSlide('next')"
+          :disabled="isTransitioning"
+        >
+          <ChevronRight class="w-8 h-8" />
+          <span class="sr-only">Suivant</span>
+        </button>
       </div>
-
-      <button
-        class="absolute left-8 top-1/2 -translate-y-1/2 p-3 bg-zinc-900 hover:bg-zinc-700 rounded-full transition-colors z-20"
-        @click="() => moveToSlide('prev')"
-        :disabled="isTransitioning"
-      >
-        <ChevronLeft class="w-8 h-8" />
-        <span class="sr-only">Précédent</span>
-      </button>
-
-      <button
-        class="absolute right-8 top-1/2 -translate-y-1/2 p-3 bg-zinc-900 hover:bg-zinc-700 rounded-full transition-colors z-20"
-        @click="() => moveToSlide('next')"
-        :disabled="isTransitioning"
-      >
-        <ChevronRight class="w-8 h-8" />
-        <span class="sr-only">Suivant</span>
-      </button>
     </div>
-    <!-- </Transition> -->
-  </div>
+  </Transition>
 </template>
 
 <style scoped>
