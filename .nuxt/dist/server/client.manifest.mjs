@@ -1,1 +1,0 @@
-export { default } from "file:///private/tmp/portfolio-the-good-one/node_modules/.pnpm/@nuxt+vite-builder@3.14.1592_@types+node@22.10.0_eslint@9.15.0_jiti@2.4.0__magicast@0.3.5_opt_tzrupqn3xme3qhrvomid7w6a5u/node_modules/@nuxt/vite-builder/dist/runtime/client.manifest.mjs"
