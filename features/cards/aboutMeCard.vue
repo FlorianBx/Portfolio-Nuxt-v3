@@ -4,7 +4,6 @@ import { useModalStore } from '../../stores/useModalStore'
 import ContentModal from '../../components/contentModal.vue'
 
 const modalStore = useModalStore()
-
 const openModal = () => {
   modalStore.openModal('about')
 }
@@ -14,40 +13,54 @@ const openModal = () => {
   <article
     aria-label="about me"
     role="navigation"
-    class="relative cursor-pointer lg shadow-lg bg-zinc-800 rounded-xl p-8 overflow-hidden col-span-1 md:col-span-1 row-span-4"
+    class="relative cursor-pointer bg-zinc-800 rounded-xl p-8 overflow-hidden hover:shadow-xl transition-all duration-300"
     @click="openModal"
   >
-    <h2 class="font-bold mb-8 uppercase z-20">about me</h2>
-    <p class="absolute bottom-24 text-4xl opacity-90 font-bebas-title z-20">
-      Hey I'm Florian <span aria-hidden="true" class="waving-hand">👋</span>, Vue.js specialist.
-      Accessibility advocate.
-    </p>
-    <p class="absolute text-2xl bottom-6 mt-4 font-bebas-title rounded block text-emerald-300 z-20">
-      Co-organizer of Vue.js Paris meetup.
-    </p>
-    <!-- <div -->
-    <!--   class="absolute w-full h-full top-0 left-0 bg-gradient-to-t from-emerald-500/20 to-transparent" -->
-    <!-- /> -->
+    <div class="relative z-20 flex flex-col h-full">
+      <h2 class="font-bold text-xl uppercase text-emerald-400 mb-8">About me</h2>
 
-    <img
-      class="absolute w-full h-full top-0 left-0 object-cover opacity-20 grayscale"
-      src="https://media.licdn.com/dms/image/v2/D4E03AQEWzb2EhoGTyw/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1696890004250?e=1738195200&v=beta&t=gUiVugdtJgrxNjiq_4w5w449DR1wvK8xwqvBTdEk4Ho"
-      alt="Florian Beaumont"
-    >
-    <button class="absolute bottom-4 right-4">
-      <CirclePlus class="w-8 h-8" />
-      <span class="sr-only">En savoir plus</span>
-    </button>
+      <div class="flex-grow flex flex-col justify-end gap-6">
+        <h3 class="text-4xl font-bebas-title leading-tight">
+          Hey I'm Florian <span aria-hidden="true" class="waving-hand inline-block">👋</span>
+          <span class="block mt-2">Vue.js Specialist &</span>
+          <span class="text-emerald-400">Accessibility Advocate</span>
+        </h3>
 
+        <div class="inline-flex items-center gap-2">
+          <span class="relative flex h-3 w-3">
+            <span
+              class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"
+            />
+            <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500" />
+          </span>
+          <span class="text-lg font-medium border-l-2 border-emerald-400 pl-2">
+            Co-organizer of
+            <span class="font-semibold text-emerald-400">Vue.js Paris</span>
+            meetup
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="absolute inset-0 z-10">
+      <div
+        class="absolute inset-0 bg-gradient-to-t from-zinc-900/90 via-zinc-900/50 to-transparent"
+      />
+      <img class="w-full h-full object-cover opacity-20 grayscale" src="/images/me.avif" alt="" >
+    </div>
+
+    <CirclePlus class="absolute bottom-4 right-4 z-20 w-8 h-8" />
     <ContentModal v-model="modalStore.isOpen" :initial-slide-id="modalStore.currentSlideId" />
   </article>
 </template>
 
 <style scoped>
-article:hover .waving-hand {
-  display: inline-block;
-  animation: wave 2.5s infinite;
+.waving-hand {
   transform-origin: 70% 70%;
+}
+
+article:hover .waving-hand {
+  animation: wave 2.5s infinite;
 }
 
 @keyframes wave {
@@ -69,9 +82,7 @@ article:hover .waving-hand {
   50% {
     transform: rotate(10deg);
   }
-  60% {
-    transform: rotate(0deg);
-  }
+  60%,
   100% {
     transform: rotate(0deg);
   }

@@ -1,30 +1,71 @@
 <script setup lang="ts">
 import { CirclePlus } from 'lucide-vue-next'
-import TechBadge from '../components/techBadge.vue'
+import { defineAsyncComponent } from 'vue'
+import { useModalStore } from '../../stores/useModalStore'
 
-defineOptions({
-  inheritAttrs: false,
-})
+const modalStore = useModalStore()
+const openModal = () => {
+  modalStore.openModal('about')
+}
 
-const technologies = [
-  { name: 'Vue.js', color: 'bg-emerald-700' },
-  { name: 'TypeScript', color: 'bg-blue-700' },
-  { name: 'Nuxt', color: 'bg-emerald-700' },
-  { name: 'TailwindCSS', color: 'bg-cyan-700' },
+interface Technology {
+  name: string
+  color: string
+  icon: any
+}
+
+const VueIcon = defineAsyncComponent(() => import('../../components/icons/vueIcon.vue'))
+const TypeScriptIcon = defineAsyncComponent(
+  () => import('../../components/icons/typescriptIcon.vue')
+)
+const NuxtIcon = defineAsyncComponent(() => import('../../components/icons/nuxtIcon.vue'))
+const TailwindIcon = defineAsyncComponent(() => import('../../components/icons/tailwindIcon.vue'))
+
+const technologies: Technology[] = [
+  {
+    name: 'Vue.js',
+    color: 'text-emerald-400',
+    icon: VueIcon,
+  },
+  {
+    name: 'TypeScript',
+    color: 'text-blue-400',
+    icon: TypeScriptIcon,
+  },
+  {
+    name: 'Nuxt',
+    color: 'text-emerald-400',
+    icon: NuxtIcon,
+  },
+  {
+    name: 'TailwindCSS',
+    color: 'text-cyan-400',
+    icon: TailwindIcon,
+  },
 ]
 </script>
 
 <template>
-  <article class="relative shadow-lg bg-zinc-800 rounded-xl p-8" :class="$attrs.class">
-    <h2 class="font-bebas-title text-2xl font-bold mb-4">Tech Stack</h2>
-    <div class="flex flex-wrap gap-3 mt-4">
-      <TechBadge
+  <article role="dialog" @click="openModal" class="relative bg-zinc-800 rounded-xl p-8">
+    <h2 class="font-bebas-title text-2xl font-bold mb-6 text-emerald-400">Tech Stack</h2>
+
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      <div
         v-for="tech in technologies"
         :key="tech.name"
-        :name="tech.name"
-        :color="tech.color"
-      />
+        class="flex items-center gap-3 p-2 rounded-lg bg-zinc-900/50 hover:bg-zinc-900 transition-colors duration-300"
+      >
+        <component :is="tech.icon" class="w-5 h-5" :class="tech.color" />
+        <span class="font-medium text-zinc-100">{{ tech.name }}</span>
+      </div>
     </div>
-    <CirclePlus class="absolute bottom-4 right-4" />
+
+    <CirclePlus class="absolute bottom-4 right-4 w-8 h-8 text-emerald-400" />
   </article>
 </template>
+
+<style scoped>
+.font-bebas-title {
+  font-family: 'Bebas Neue', sans-serif;
+}
+</style>
