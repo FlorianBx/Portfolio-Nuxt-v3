@@ -1,12 +1,6 @@
 <script setup lang="ts">
 import { CirclePlus } from 'lucide-vue-next'
 import { defineAsyncComponent } from 'vue'
-import { useModalStore } from '../../stores/useModalStore'
-
-const modalStore = useModalStore()
-const openModal = () => {
-  modalStore.openModal('about')
-}
 
 interface Technology {
   name: string
@@ -46,7 +40,7 @@ const technologies: Technology[] = [
 </script>
 
 <template>
-  <article role="dialog" @click="openModal" class="relative bg-zinc-800 rounded-xl p-8">
+  <article class="relative bg-zinc-800 rounded-xl transition-all duration-300 p-8">
     <h2 class="font-bebas-title text-2xl font-bold mb-6 text-emerald-400">Tech Stack</h2>
 
     <div class="grid grid-cols-2 gap-4 mb-4">
@@ -59,8 +53,6 @@ const technologies: Technology[] = [
         <span class="font-medium text-zinc-100">{{ tech.name }}</span>
       </div>
     </div>
-
-    <CirclePlus class="absolute bottom-4 right-4 w-8 h-8 text-emerald-400" />
   </article>
 </template>
 

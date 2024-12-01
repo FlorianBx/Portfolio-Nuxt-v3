@@ -3,7 +3,6 @@ import type { DefineComponent, SlotsType } from 'vue'
 type IslandComponent<T extends DefineComponent> = T & DefineComponent<{}, {refresh: () => Promise<void>}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, SlotsType<{ fallback: { error: unknown } }>>
 interface _GlobalComponents {
       'ArticleItem': typeof import("../components/articleItem.vue")['default']
-    'Carousel': typeof import("../components/carousel.vue")['default']
     'ContentModal': typeof import("../components/contentModal.vue")['default']
     'IconsBlueskyIcon': typeof import("../components/icons/blueskyIcon.vue")['default']
     'IconsLinkedinIcon': typeof import("../components/icons/linkedinIcon.vue")['default']
@@ -78,7 +77,6 @@ interface _GlobalComponents {
     'NuxtIsland': typeof import("../node_modules/.pnpm/nuxt@3.14.1592_@parcel+watcher@2.5.0_@types+node@22.10.0_eslint@9.15.0_jiti@2.4.0__ioredis@5._bkt54fwpj3o7ponns2w7un5mc4/node_modules/nuxt/dist/app/components/nuxt-island")['default']
     'NuxtRouteAnnouncer': IslandComponent<typeof import("../node_modules/.pnpm/nuxt@3.14.1592_@parcel+watcher@2.5.0_@types+node@22.10.0_eslint@9.15.0_jiti@2.4.0__ioredis@5._bkt54fwpj3o7ponns2w7un5mc4/node_modules/nuxt/dist/app/components/server-placeholder")['default']>
       'LazyArticleItem': typeof import("../components/articleItem.vue")['default']
-    'LazyCarousel': typeof import("../components/carousel.vue")['default']
     'LazyContentModal': typeof import("../components/contentModal.vue")['default']
     'LazyIconsBlueskyIcon': typeof import("../components/icons/blueskyIcon.vue")['default']
     'LazyIconsLinkedinIcon': typeof import("../components/icons/linkedinIcon.vue")['default']
@@ -159,7 +157,6 @@ declare module 'vue' {
 }
 
 export const ArticleItem: typeof import("../components/articleItem.vue")['default']
-export const Carousel: typeof import("../components/carousel.vue")['default']
 export const ContentModal: typeof import("../components/contentModal.vue")['default']
 export const IconsBlueskyIcon: typeof import("../components/icons/blueskyIcon.vue")['default']
 export const IconsLinkedinIcon: typeof import("../components/icons/linkedinIcon.vue")['default']
@@ -234,7 +231,6 @@ export const Body: typeof import("../node_modules/.pnpm/nuxt@3.14.1592_@parcel+w
 export const NuxtIsland: typeof import("../node_modules/.pnpm/nuxt@3.14.1592_@parcel+watcher@2.5.0_@types+node@22.10.0_eslint@9.15.0_jiti@2.4.0__ioredis@5._bkt54fwpj3o7ponns2w7un5mc4/node_modules/nuxt/dist/app/components/nuxt-island")['default']
 export const NuxtRouteAnnouncer: IslandComponent<typeof import("../node_modules/.pnpm/nuxt@3.14.1592_@parcel+watcher@2.5.0_@types+node@22.10.0_eslint@9.15.0_jiti@2.4.0__ioredis@5._bkt54fwpj3o7ponns2w7un5mc4/node_modules/nuxt/dist/app/components/server-placeholder")['default']>
 export const LazyArticleItem: typeof import("../components/articleItem.vue")['default']
-export const LazyCarousel: typeof import("../components/carousel.vue")['default']
 export const LazyContentModal: typeof import("../components/contentModal.vue")['default']
 export const LazyIconsBlueskyIcon: typeof import("../components/icons/blueskyIcon.vue")['default']
 export const LazyIconsLinkedinIcon: typeof import("../components/icons/linkedinIcon.vue")['default']

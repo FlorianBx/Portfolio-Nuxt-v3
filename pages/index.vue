@@ -5,6 +5,10 @@ import ContactCard from '../features/cards/contactCard.vue'
 import BlogArticlesCard from '../features/cards/blogCard.vue'
 import TechStackCard from '../features/cards/techStackCard.vue'
 import LatestTalkCard from '../features/cards/latestTalkCard.vue'
+import ContentModal from '../components/contentModal.vue'
+import { useModalStore } from '../stores/useModalStore'
+
+const modalStore = useModalStore()
 </script>
 
 <template>
@@ -15,5 +19,7 @@ import LatestTalkCard from '../features/cards/latestTalkCard.vue'
     <BlogArticlesCard class="col-span-1 row-span-4" />
     <TechStackCard class="col-span-1 row-span-2" />
     <LatestTalkCard class="col-span-1 row-span-2" />
+
+    <ContentModal v-model="modalStore.isOpen" :initial-slide-id="modalStore.currentSlideId" />
   </section>
 </template>

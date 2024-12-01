@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { CirclePlus } from 'lucide-vue-next'
 import ArticleItem from '../../components/articleItem.vue'
-import { useModalStore } from '@/stores/useModalStore'
+import { useModalStore } from '../../stores/useModalStore'
 
 interface Article {
   title: string
@@ -13,10 +13,8 @@ interface Article {
 const { data: articles } = await useAsyncData('articles', () =>
   queryContent('blog').sort({ createdAt: -1 }).limit(3).find()
 )
-
 const isLoading = ref(false)
 const error = ref<Error | null>(null)
-
 const modalStore = useModalStore()
 
 const openModal = () => {
@@ -28,16 +26,20 @@ const openModal = () => {
   <article
     role="dialog"
     @click="openModal"
-    class="relative shadow-lg cursor-pointer bg-zinc-800 rounded-xl p-8"
+    class="relative bg-zinc-800 rounded-xl p-8 cursor-pointer hover:scale-[1.02] hover:shadow-xl transition-all duration-200"
   >
-    <h2 class="font-bold mb-8 uppercase">Blog & Articles</h2>
+    <h2 class="text-2xl font-bebas-title font-bold text-emerald-400 mb-6">Blog & Articles</h2>
 
-    <div v-if="isLoading" class="flex justify-center items-center h-32">
-      <span class="loading">Chargement des articles...</span>
+    <div v-if="isLoading" class="flex justify-center items-center h-32 bg-zinc-900/50 rounded-lg">
+      <div class="flex items-center gap-3">
+        <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+        <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse [animation-delay:200ms]" />
+        <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse [animation-delay:400ms]" />
+      </div>
     </div>
 
-    <div v-else-if="error" class="text-red-400 p-4">
-      Une erreur est survenue lors du chargement des articles.
+    <div v-else-if="error" class="p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
+      <p class="text-red-400 text-sm">Une erreur est survenue lors du chargement des articles.</p>
     </div>
 
     <div v-else class="space-y-4">
@@ -46,17 +48,19 @@ const openModal = () => {
         :key="article._path"
         :title="article.title"
         :description="article.description"
-        @click="navigateTo(article._path)"
+        class="transition-transform duration-300 hover:translate-x-1"
+        @click.stop="navigateTo(article._path)"
       />
     </div>
-    <CirclePlus class="absolute bottom-4 right-4" />
 
-    <ContentModal v-model="modalStore.isOpen" :initial-slide-id="modalStore.currentSlideId" />
+    <CirclePlus
+      class="absolute bottom-4 right-4 w-8 h-8 text-emerald-400 hover:text-emerald-300 transition-colors duration-300"
+    />
   </article>
 </template>
 
 <style scoped>
-.loading {
-  @apply text-emerald-400 text-sm;
+.font-bebas-title {
+  font-family: 'Bebas Neue', sans-serif;
 }
 </style>

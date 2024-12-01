@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { CirclePlus } from 'lucide-vue-next'
 import { useModalStore } from '../../stores/useModalStore'
-import ContentModal from '../../components/contentModal.vue'
 
 const modalStore = useModalStore()
 const openModal = () => {
@@ -13,7 +12,7 @@ const openModal = () => {
   <article
     aria-label="about me"
     role="navigation"
-    class="relative cursor-pointer bg-zinc-800 rounded-xl p-8 overflow-hidden hover:shadow-xl transition-all duration-300"
+    class="relative cursor-pointer bg-zinc-800 rounded-xl p-8 overflow-hidden hover:scale-[1.02] hover:shadow-xl transition-all duration-300"
     @click="openModal"
   >
     <div class="relative z-20 flex flex-col h-full">
@@ -50,7 +49,6 @@ const openModal = () => {
     </div>
 
     <CirclePlus class="absolute bottom-4 right-4 z-20 w-8 h-8" />
-    <ContentModal v-model="modalStore.isOpen" :initial-slide-id="modalStore.currentSlideId" />
   </article>
 </template>
 

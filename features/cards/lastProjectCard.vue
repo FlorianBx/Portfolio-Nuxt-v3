@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { CirclePlus } from 'lucide-vue-next'
-import ContentModal from '../../components/contentModal.vue'
 import { useModalStore } from '../../stores/useModalStore'
 
 const modalStore = useModalStore()
@@ -13,7 +12,7 @@ const openModal = () => {
   <article
     aria-label="last project"
     role="navigation"
-    class="relative bg-zinc-800 rounded-xl overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-xl h-full"
+    class="relative bg-zinc-800 rounded-xl overflow-hidden cursor-pointer hover:scale-[1.02] hover:shadow-xl transition-all duration-300 h-full"
     @click="openModal"
   >
     <div class="p-8 pb-4">
@@ -55,8 +54,6 @@ const openModal = () => {
       <CirclePlus class="w-8 h-8 text-emerald-400" />
       <span class="sr-only">En savoir plus sur WebAll1Lab</span>
     </button>
-
-    <ContentModal v-model="modalStore.isOpen" :initial-slide-id="modalStore.currentSlideId" />
   </article>
 </template>
 

@@ -26,7 +26,7 @@ const socialLinks: SocialLink[] = [
   {
     icon: MailIcon,
     label: 'Email',
-    href: 'mailto:florian.beaumont@gmail.com',
+    href: 'mailto:florian.beaumont412@gmail.com',
     color: 'hover:text-red-500',
   },
 ]
@@ -34,7 +34,7 @@ const socialLinks: SocialLink[] = [
 
 <template>
   <article class="relative bg-zinc-800 rounded-xl p-8 overflow-hidden transition-all duration-300">
-    <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent" />
+    <div class="absolute inset-0 bg-gradient-to-bl from-emerald-500/10 to-transparent" />
 
     <div class="relative z-10 flex flex-col items-center">
       <h2 class="text-5xl mb-2 font-bebas font-bold text-emerald-400">Contact me</h2>
