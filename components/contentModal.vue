@@ -229,7 +229,7 @@ onBeforeUnmount(() => {
         </div>
 
         <button
-          class="absolute left-8 top-1/2 -translate-y-1/2 p-3 bg-zinc-900 hover:bg-zinc-700 rounded-full transition-colors z-20"
+          class="absolute sm:left-1 lg:left-4 sm:top-1/2 right-20 sm:right-auto sm:bottom-auto -bottom-6 -translate-y-1/2 p-3 bg-zinc-900 hover:bg-zinc-700 rounded-full transition-colors z-20"
           @click="() => moveToSlide('prev')"
           :disabled="isTransitioning"
         >
@@ -238,7 +238,7 @@ onBeforeUnmount(() => {
         </button>
 
         <button
-          class="absolute right-8 top-1/2 -translate-y-1/2 p-3 bg-zinc-900 hover:bg-zinc-700 rounded-full transition-colors z-20"
+          class="absolute right-4 -bottom-6 sm:bottom-auto sm:right-1 lg:right-4 sm:top-1/2 -translate-y-1/2 p-3 bg-zinc-900 hover:bg-zinc-700 rounded-full transition-colors z-20"
           @click="() => moveToSlide('next')"
           :disabled="isTransitioning"
         >
