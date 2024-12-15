@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { BookOpen, Clock, ArrowUpRight } from 'lucide-vue-next'
 import TechBadge from '../../components/techBadge.vue'
 

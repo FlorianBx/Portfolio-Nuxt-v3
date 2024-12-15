@@ -43,11 +43,11 @@ const talks = ref<Talk[]>([
         <Users class="w-8 h-8 text-emerald-400" />
       </div>
 
-      <div class="grid gap-6">
+      <div>
         <article
           v-for="talk in talks"
           :key="talk.title"
-          class="bg-zinc-900/50 rounded-lg p-6 space-y-4"
+          class="bg-zinc-900/50 mb-6 rounded-lg p-6 space-y-4"
         >
           <h2 class="text-2xl font-bold">{{ talk.title }}</h2>
 
@@ -68,7 +68,7 @@ const talks = ref<Talk[]>([
 
           <p class="text-zinc-300">{{ talk.description }}</p>
 
-          <div class="flex gap-4">
+          <div class="flex flex-wrap gap-4">
             <a
               v-if="talk.slides"
               :href="talk.slides"
