@@ -192,13 +192,13 @@ onBeforeUnmount(() => {
         <div class="absolute inset-0 bg-black/20 backdrop-blur-sm" aria-hidden="true" />
 
         <div class="relative w-full h-[90vh] flex items-center justify-center">
-          <div aria-hidden="true" class="absolute left-0 w-[8vw] h-[65vh] bg-zinc-800 rounded-lg" />
+          <div aria-hidden="true" class="absolute hidden sm:block left-0 w-[8vw] h-[65vh] bg-zinc-800 rounded-lg" />
 
           <div
             v-for="(slide, index) in slides"
             :key="slide.id"
             ref="slideRefs"
-            class="absolute rounded-lg left-[10vw] right-[10vw] h-[80vh] bg-zinc-800 shadow-lg"
+            class="absolute rounded-lg left-[2vw] right-[2vw] sm:left-[10vw] sm:right-[10vw] h-[80vh] bg-zinc-800 shadow-lg"
             :style="{
               zIndex: index === currentIndex ? 2 : 1,
               visibility: isSlideVisible(index) ? 'visible' : 'hidden',
@@ -224,7 +224,7 @@ onBeforeUnmount(() => {
 
           <div
             aria-hidden="true"
-            class="absolute right-0 w-[8vw] h-[65vh] bg-zinc-800 rounded-lg"
+            class="absolute hidden sm:block right-0 w-[8vw] h-[65vh] bg-zinc-800 rounded-lg"
           />
         </div>
 
