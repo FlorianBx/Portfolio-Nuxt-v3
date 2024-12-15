@@ -27,9 +27,9 @@ const features = ref([
 </script>
 
 <template>
-  <div class="h-full grid grid-cols-1 md:grid-cols-2 gap-8">
+  <div class="h-full grid grid-cols-1 lg:grid-cols-2 gap-8">
     <!-- Left Column: Project Details -->
-    <div class="p-8 space-y-8">
+    <div class="sm:p-8 space-y-8">
       <section class="space-y-6">
         <h1 class="text-5xl font-bebas text-emerald-400">WebA11yLab</h1>
         <div class="space-y-4">
@@ -65,12 +65,12 @@ const features = ref([
         </div>
       </section>
 
-      <div class="flex gap-4">
+      <div class="flex flex-wrap gap-4">
         <NuxtLink
           to="https://weba11ylab.dev"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-400 text-zinc-900 rounded-lg hover:bg-emerald-500 transition-colors"
+          class="inline-flex w-full sm:w-auto items-center gap-2 px-4 py-2 bg-emerald-400 text-zinc-900 rounded-lg hover:bg-emerald-500 transition-colors"
         >
           <ExternalLinkIcon class="w-4 h-4" />
           Voir le site
@@ -79,7 +79,7 @@ const features = ref([
           to="https://github.com/florianbx/weba11ylab"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex items-center gap-2 px-4 py-2 bg-zinc-700 text-zinc-100 rounded-lg hover:bg-zinc-600 transition-colors"
+          class="inline-flex w-full sm:w-auto items-center gap-2 px-4 py-2 bg-zinc-700 text-zinc-100 rounded-lg hover:bg-zinc-600 transition-colors"
         >
           <GithubIcon class="w-4 h-4" />
           GitHub
