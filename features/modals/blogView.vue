@@ -60,7 +60,7 @@ const navigateToArticle = (path: string) => {
       </div>
 
       <!-- Filtres -->
-      <div class="flex gap-3 pb-4 border-b border-zinc-700">
+      <div class="flex flex-wrap gap-3 pb-4 border-b border-zinc-700">
         <button
           v-for="category in categories"
           :key="category.id"
