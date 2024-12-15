@@ -23,7 +23,7 @@ if (!article.value) {
 </script>
 
 <template>
-  <article v-if="article" class="max-w-8xl mx-auto px-4 py-12">
+  <article v-if="article" class="max-w-8xl mx-auto md:px-2 py-12">
     <NuxtLink
       to="/blog"
       class="inline-flex items-center gap-2 px- py-2 mb-8 text-zinc-400 hover:text-emerald-400 transition-colors group"

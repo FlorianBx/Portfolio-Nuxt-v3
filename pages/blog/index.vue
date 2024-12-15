@@ -63,7 +63,7 @@ const filteredArticles = computed(() => {
 </script>
 
 <template>
-  <div class="max-w-8xl mx-auto py-12 px-4 space-y-12">
+  <div class="max-w-8xl mx-auto py-12 md:px-2 space-y-12">
     <section class="space-y-4">
       <h1 class="text-6xl font-bebas text-emerald-400">Blog & Articles</h1>
       <p class="text-xl text-zinc-300 max-w-2xl">
@@ -74,7 +74,7 @@ const filteredArticles = computed(() => {
 
     <section class="space-y-6">
       <div class="flex flex-col gap-4 items-start justify-between">
-        <div class="flex gap-3 overflow-x-auto pb-2 w-full sm:w-auto">
+        <div class="flex flex-wrap gap-3 overflow-x-auto pb-2 w-full sm:w-auto">
           <button
             v-for="category in categories"
             :key="category.id"
