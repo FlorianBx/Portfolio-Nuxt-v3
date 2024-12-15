@@ -34,7 +34,7 @@ const openModal = () => {
     </div>
 
     <CirclePlus
-      class="absolute bottom-4 right-4 w-8 h-8 text-emerald-400 hover:text-emerald-300 transition-colors duration-300"
+      class="absolute bottom-4 right-2 w-8 h-8 text-emerald-400 hover:text-emerald-300 transition-colors duration-300"
     />
   </article>
 </template>

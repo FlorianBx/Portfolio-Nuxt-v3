@@ -40,7 +40,7 @@ const socialLinks: SocialLink[] = [
       <h2 class="text-5xl mb-2 font-bebas font-bold text-emerald-400">Contact me</h2>
       <p class="text-zinc-400 mb-8 text-sm">Let's get in touch!</p>
 
-      <div class="flex justify-center items-center gap-8">
+      <div class="flex justify-center items-center gap-4 md:gap-8">
         <a
           v-for="link in socialLinks"
           :key="link.label"

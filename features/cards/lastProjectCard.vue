@@ -49,7 +49,7 @@ const openModal = () => {
     </div>
 
     <button
-      class="absolute bottom-4 right-4 p-2 rounded-full transition-all duration-200 hover:bg-zinc-700"
+      class="absolute bottom-4 right-2 p-2 rounded-full transition-all duration-200 hover:bg-zinc-700"
     >
       <CirclePlus class="w-8 h-8 text-emerald-400" />
       <span class="sr-only">En savoir plus sur WebAll1Lab</span>

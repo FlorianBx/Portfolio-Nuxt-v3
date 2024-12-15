@@ -26,7 +26,7 @@ const openModal = () => {
   <article
     role="dialog"
     @click="openModal"
-    class="relative bg-zinc-800 rounded-xl p-8 cursor-pointer hover:scale-[1.02] hover:shadow-xl transition-all duration-200"
+    class="relative bg-zinc-800 rounded-xl p-4 sm:p-8 pb-14 cursor-pointer hover:scale-[1.02] hover:shadow-xl transition-all duration-200"
   >
     <h2 class="text-2xl font-bebas-title font-bold text-emerald-400 mb-6">Blog & Articles</h2>
 
